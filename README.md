@@ -1,3 +1,3 @@
 # ninja_trips
 
-A new Ninja Flutter project.
+Flutter implicit and explicit animations.

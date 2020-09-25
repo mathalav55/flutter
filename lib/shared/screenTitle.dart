@@ -13,12 +13,13 @@ class ScreenTitle extends StatelessWidget {
         style: TextStyle(fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold),
       ),
       duration: Duration(milliseconds: 600),
+      curve: Curves.easeIn,
       tween: Tween<double>(begin: 0, end: 1),
       builder: (BuildContext context, double _val, Widget child) {
         return Opacity(
           opacity: _val,
           child: Padding(
-            padding: EdgeInsets.only(top: _val * 20),
+            padding: EdgeInsets.only(top: _val * 30),
             child: child,
           ),
         );

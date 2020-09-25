@@ -8,13 +8,17 @@ class TripList extends StatefulWidget {
 }
 
 class _TripListState extends State<TripList> {
+  final _listKey = GlobalKey<AnimatedListState>();
+  Tween<Offset> _offset = Tween(begin: Offset(1, 0), end: Offset(0, 0));
+
   List<Widget> _tripTiles = [];
-  final GlobalKey _listKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _addTrips();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _addTrips();
+    });
   }
 
   void _addTrips() {
@@ -28,6 +32,7 @@ class _TripListState extends State<TripList> {
 
     _trips.forEach((Trip trip) {
       _tripTiles.add(_buildTile(trip));
+      _listKey.currentState.insertItem(_tripTiles.length - 1);
     });
   }
 
@@ -48,7 +53,7 @@ class _TripListState extends State<TripList> {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: Hero(
-          tag: 'location-img ${trip.img}',
+          tag: 'location-img-${trip.img}',
           child: Image.asset(
             'images/${trip.img}',
             height: 50.0,
@@ -61,11 +66,14 @@ class _TripListState extends State<TripList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return AnimatedList(
         key: _listKey,
-        itemCount: _tripTiles.length,
-        itemBuilder: (context, index) {
-          return _tripTiles[index];
+        initialItemCount: _tripTiles.length,
+        itemBuilder: (context, index, animation) {
+          return SlideTransition(
+            position: animation.drive(_offset),
+            child: _tripTiles[index],
+          );
         });
   }
 }
